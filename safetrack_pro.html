@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SafeTrack PRO</title>
+<style>
+body { font-family: Arial; text-align:center; background:#0a0a1a; color:white; }
+button {
+padding:12px 20px;
+font-size:16px;
+border:none;
+border-radius:8px;
+margin:8px;
+}
+#start { background:cyan; }
+#stop { background:orange; }
+#emergency { background:red; color:white; }
+#map { margin-top:15px; }
+</style>
+</head>
+<body>
+
+<h2>🌍 SafeTrack PRO</h2>
+<p>Berbagi lokasi dengan izin</p>
+
+<button id="start" onclick="startTracking()">📍 Mulai Tracking</button>
+<button id="stop" onclick="stopTracking()">⛔ Stop</button>
+<button id="emergency" onclick="sendEmergency()">🚨 Emergency</button>
+
+<p id="status">Status: Tidak aktif</p>
+<div id="map"></div>
+
+<script>
+let watchId;
+
+function startTracking(){
+    if(navigator.geolocation){
+        watchId = navigator.geolocation.watchPosition(showPosition);
+        document.getElementById("status").innerHTML="Status: Tracking aktif";
+    }
+}
+
+function stopTracking(){
+    navigator.geolocation.clearWatch(watchId);
+    document.getElementById("status").innerHTML="Status: Tracking dihentikan";
+}
+
+function showPosition(position){
+    let lat = position.coords.latitude;
+    let lon = position.coords.longitude;
+
+    let map = `
+    <iframe width="100%" height="400"
+    src="https://maps.google.com/maps?q=${lat},${lon}&z=16&output=embed">
+    </iframe>`;
+    document.getElementById("map").innerHTML = map;
+}
+
+function sendEmergency(){
+    let phone = "6281234567890"; // ganti dengan nomor orang tua
+    let message = "Saya dalam keadaan darurat. Ini lokasi saya:";
+    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`);
+}
+</script>
+
+</body>
+</html>
